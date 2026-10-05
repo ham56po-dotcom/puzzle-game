@@ -3,10 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لعبة ألغاز الذكاء - Puzzle Game</title>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  
+  <title>لعبة ألغاز الذكاء</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #0F172A;
@@ -18,10 +16,10 @@
       --text: #F8FAFC;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+    * { box-sizing: border-box; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; }
 
     body {
-      background-color: var(--bg);
+      background: var(--bg);
       color: var(--text);
       display: flex;
       justify-content: center;
@@ -30,14 +28,14 @@
       padding: 15px;
     }
 
-    .game-card {
+    .card {
       background: var(--card-bg);
-      width: 100%;
-      max-width: 500px;
-      border-radius: 24px;
       padding: 25px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.1);
       text-align: center;
       position: relative;
     }
@@ -50,33 +48,34 @@
     }
 
     .btn-sound {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255,255,255,0.1);
       border: none;
       color: white;
       font-size: 1.2rem;
-      padding: 8px 12px;
+      padding: 6px 12px;
       border-radius: 50%;
       cursor: pointer;
     }
 
-    .header-stats {
+    .stats {
       display: flex;
       justify-content: space-around;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 12px;
-      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      padding: 10px;
+      border-radius: 12px;
       margin-bottom: 15px;
+      font-size: 0.95rem;
+      font-weight: 700;
     }
 
-    .stat-box { font-size: 1rem; font-weight: 700; }
-    .stat-box span { color: var(--accent); font-weight: 800; }
+    .stats b { color: var(--accent); }
 
     .timer-bar-bg {
       width: 100%;
       height: 8px;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255,255,255,0.1);
       border-radius: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       overflow: hidden;
     }
 
@@ -84,126 +83,72 @@
       height: 100%;
       width: 100%;
       background: var(--accent);
-      transition: width 1s linear, background-color 0.3s;
+      transition: width 1s linear;
     }
 
-    .level-badge {
-      display: inline-block;
-      background: linear-gradient(135deg, var(--primary), #818CF8);
-      padding: 6px 18px;
-      border-radius: 20px;
-      font-size: 1rem;
+    .riddle {
+      font-size: 1.2rem;
       font-weight: 800;
-      margin-bottom: 15px;
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-    }
-
-    .riddle-text {
-      font-size: 1.25rem;
-      font-weight: 800;
-      line-height: 1.6;
       margin-bottom: 20px;
-      min-height: 70px;
+      min-height: 60px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .options-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .btn-option {
-      background: rgba(255, 255, 255, 0.06);
-      color: var(--text);
-      border: 2px solid rgba(255, 255, 255, 0.1);
+    .option {
+      background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(255,255,255,0.1);
+      color: white;
       padding: 12px;
-      border-radius: 14px;
+      border-radius: 12px;
+      margin-top: 10px;
       font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s ease;
+      width: 100%;
+      transition: all 0.2s;
     }
 
-    .btn-option:hover:not(:disabled) {
-      background: rgba(255, 255, 255, 0.15);
-      border-color: var(--accent);
-    }
+    .option:hover:not(:disabled) { border-color: var(--accent); }
+    .option.correct { background: var(--success) !important; border-color: var(--success) !important; }
+    .option.wrong { background: var(--danger) !important; border-color: var(--danger) !important; }
 
-    .btn-option.correct {
-      background: var(--success) !important;
-      border-color: var(--success) !important;
-      color: white;
-    }
-
-    .btn-option.wrong {
-      background: var(--danger) !important;
-      border-color: var(--danger) !important;
-      color: white;
-    }
-
-    .helpers-row {
+    .helpers {
       display: flex;
       gap: 10px;
-      justify-content: center;
-      margin-top: 10px;
+      margin-top: 15px;
     }
 
     .btn-helper {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      flex: 1;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.2);
       color: #9CA3AF;
-      padding: 8px 12px;
-      border-radius: 10px;
+      padding: 8px;
+      border-radius: 8px;
       font-size: 0.85rem;
       font-weight: 700;
       cursor: pointer;
     }
 
-    .btn-helper:hover:not(:disabled) {
-      color: var(--accent);
-      border-color: var(--accent);
-    }
-
-    .btn-helper:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-
-    .start-screen {
-      padding: 20px 10px;
-    }
-
-    .start-title {
-      font-size: 2rem;
-      font-weight: 900;
-      color: var(--accent);
-      margin-bottom: 10px;
-    }
-
     .btn-main {
-      background: linear-gradient(135deg, var(--accent), #F59E0B);
+      background: var(--accent);
       color: #000;
       border: none;
-      padding: 14px 35px;
+      padding: 14px 30px;
       font-size: 1.2rem;
       font-weight: 900;
       border-radius: 14px;
       cursor: pointer;
       margin-top: 20px;
-      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
-      transition: transform 0.2s;
+      width: 100%;
     }
-
-    .btn-main:active { transform: scale(0.95); }
 
     .modal {
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(15, 23, 42, 0.95);
+      background: rgba(15, 23, 42, 0.96);
       border-radius: 24px;
       display: flex;
       flex-direction: column;
@@ -216,162 +161,135 @@
 </head>
 <body>
 
-  <div class="game-card" id="gameBox">
-    <!-- شاشة البداية -->
-    <div id="startScreen" class="start-screen">
+  <div class="card" id="gameCard">
+    <!-- شاشة البداية (Start Screen) -->
+    <div id="startScreen">
       <div style="font-size: 4rem; margin-bottom: 10px;">🧩</div>
-      <div class="start-title">ألغاز الذكاء الخارقة</div>
-      <p style="color: #9CA3AF; font-weight: 600;">تحدَّ نفسك في مستويات لا تنتهي! اجمع العملات، وافتح الجوائز، وأثبت أنك أذكى لاعب!</p>
+      <h1 style="color: var(--accent); margin-bottom: 10px;">ألغاز الذكاء الخارقة</h1>
+      <p style="color: #9CA3AF; margin-bottom: 20px;">تحدَّ نفسك في مستويات بلا نهاية! اجمع العملات، وافتح الجوائز والمكافآت!</p>
       <button class="btn-main" onclick="startGame()">▶️ ابدأ اللعبة (Start Game)</button>
     </div>
 
-    <!-- واجهة اللعبة الرئيسية (مخفية في البداية) -->
+    <!-- واجهة اللعب -->
     <div id="playArea" style="display: none;">
       <div class="top-bar">
         <button class="btn-sound" id="soundBtn" onclick="toggleSound()">🔊</button>
-        <button class="btn-helper" style="color: #EF4444;" onclick="restartGame()">🔄 إعادة (Restart)</button>
+        <button class="btn-helper" style="color: #EF4444; flex: none; padding: 6px 12px;" onclick="restartGame()">🔄 إعادة (Restart)</button>
       </div>
 
-      <div class="header-stats">
-        <div class="stat-box">⭐ المستوى: <span id="levelNum">1</span></div>
-        <div class="stat-box">🪙 العملات: <span id="coinsNum">0</span></div>
-        <div class="stat-box">⏳ الوقت: <span id="timeLeft">15</span>s</div>
+      <div class="stats">
+        <div>⭐ المرحلة: <b id="levelNum">1</b></div>
+        <div>🪙 العملات: <b id="coinsNum">0</b></div>
+        <div>⏳ الوقت: <b id="timeLeft">15</b>s</div>
       </div>
 
       <div class="timer-bar-bg">
         <div class="timer-bar" id="timerBar"></div>
       </div>
 
-      <span class="level-badge" id="levelBadge">المرحلة 1</span>
+      <div class="riddle" id="riddleText">جاري تحميل اللغز...</div>
+      <div id="optionsBox"></div>
 
-      <div class="riddle-text" id="riddleDisplay">جاري تحضير اللغز...</div>
-
-      <div class="options-grid" id="optionsBox"></div>
-
-      <div class="helpers-row">
-        <button class="btn-helper" id="btn5050" onclick="use5050()">💡 حذف إجابتين (30 🪙)</button>
-        <button class="btn-helper" id="btnSkip" onclick="useSkip()">⏭️ تخطي المرحلة (50 🪙)</button>
+      <div class="helpers">
+        <button class="btn-helper" id="btn5050" onclick="use5050()">💡 حذف إجابتين (30🪙)</button>
+        <button class="btn-helper" id="btnSkip" onclick="useSkip()">⏭️ تخطي (50🪙)</button>
       </div>
     </div>
 
-    <!-- شباك المكافآت والجوائز -->
+    <!-- شباك الجوائز عند كل 5 مستويات -->
     <div id="rewardModal" class="modal" style="display: none;">
       <div style="font-size: 4.5rem; margin-bottom: 10px;">🎁</div>
-      <h2 style="color: var(--accent); font-size: 1.8rem; margin-bottom: 10px;">مبروك! جائزة المستوى!</h2>
-      <p id="rewardText" style="font-size: 1.1rem; margin-bottom: 20px;">لقد أكملت 5 مستويات بنجاح وحصلت على مكافأة خاصة!</p>
-      <button class="btn-main" onclick="closeRewardModal()">متابعة اللعب 🚀</button>
+      <h2 style="color: var(--accent); margin-bottom: 10px;">جائزة المستوى!</h2>
+      <p id="rewardMsg" style="margin-bottom: 20px;">أكملت 5 مستويات وحصلت على +50 عملة 🪙!</p>
+      <button class="btn-main" onclick="closeReward()">متابعة اللعب 🚀</button>
     </div>
 
     <!-- شباك الخسارة -->
     <div id="gameOverModal" class="modal" style="display: none;">
       <div style="font-size: 4.5rem; margin-bottom: 10px;">💥</div>
-      <h2 style="color: var(--danger); font-size: 1.8rem; margin-bottom: 10px;">انتهى الوقت / إجابة خاطئة!</h2>
-      <p style="font-size: 1.1rem; margin-bottom: 10px;">وصلت إلى المستوى: <strong id="finalLevel" style="color: var(--accent);">1</strong></p>
-      <p style="font-size: 1.1rem; margin-bottom: 20px;">رصيدك من العملات: <strong id="finalCoins" style="color: var(--accent);">0</strong> 🪙</p>
-      <button class="btn-main" onclick="restartGame()">🔄 ابدأ من جديد (Restart)</button>
+      <h2 style="color: var(--danger); margin-bottom: 10px;">انتهى التحدي!</h2>
+      <p style="margin-bottom: 5px;">وصلت إلى المستوى: <b id="finalLevel" style="color: var(--accent);">1</b></p>
+      <p style="margin-bottom: 20px;">رصيدك النهائي: <b id="finalCoins" style="color: var(--accent);">0</b> 🪙</p>
+      <button class="btn-main" onclick="restartGame()">🔄 العب من جديد (Restart)</button>
     </div>
   </div>
 
   <script>
-    // بنك الأسئلة الشاملة والذكية
-    const questionBank = [
+    const questions = [
       { q: "ما هو الشيء الذي كلما أخذت منه كِبَر؟", opts: ["الحفرة", "البحر", "العمر", "الجبل"], a: 0 },
-      { q: "ما هو الشيء الذي يملك أسناناً كثيرة ولكنه لا يعض؟", opts: ["المشط", "المنشار", "القرش", "المفتاح"], a: 0 },
-      { q: "ما هو الشيء الذي يمر عبر المدن والقرى لكنه لا يتحرك؟", opts: ["الطريق", "القطار", "الهواء", "النهر"], a: 0 },
-      { q: "ما هو الشيء الذي يحضر ولا يُرى، ويتكلم بلا لسان؟", opts: ["الصدى", "الهواء", "العقل", "الحلم"], a: 0 },
-      { q: "شيء مليء بالثقوب ولكنه ما زال يحتفظ بالماء؟", opts: ["الإسفنج", "الشبكة", "الغربال", "الدلو"], a: 0 },
-      { q: "أنا أملك مدناً بدون بيوت، وجبالاً بدون أشجار، وبحاراً بدون ماء، فمن أنا؟", opts: ["الخريطة", "اللوحة", "المكوك", "الكوكب"], a: 0 },
+      { q: "شيء يملك أسناناً كثيرة ولكنه لا يعض؟", opts: ["المشط", "المنشار", "القرش", "المفتاح"], a: 0 },
+      { q: "يمر عبر المدن والقرى لكنه لا يتحرك؟", opts: ["الطريق", "القطار", "الهواء", "النهر"], a: 0 },
+      { q: "شيء مليء بالثقوب ولكنه يحتفظ بالماء؟", opts: ["الإسفنج", "الشبكة", "الغربال", "الدلو"], a: 0 },
       { q: "ما هو الشيء الذي يمكنك كسرُه دون أن تلمسَه؟", opts: ["الوعد", "الزجاج", "الخشب", "الصحن"], a: 0 },
+      { q: "ما هو الشيء الذي يحضر ولا يُرى، ويتكلم بلا لسان؟", opts: ["الصدى", "الهواء", "العقل", "الحلم"], a: 0 },
       { q: "ما هو البيت الذي ليس فيه أبواب ولا نوافذ؟", opts: ["بيت الشعر", "بيت الدجاج", "بيت العنكبوت", "المقبرة"], a: 0 },
       { q: "شيء إذا أطعمته كَبُر، وإذا سقيته ماءً مات؟", opts: ["النار", "الشجرة", "الأسد", "الطفل"], a: 0 },
-      { q: "له عين واحدة ولكنه لا يستطيع رؤية أي شيء؟", opts: ["الإبرة", "الإعصار", "الكاميرا", "الخفاش"], a: 0 },
-      { q: "يمشي بلا أرجل ويصيح بلا حنجرة؟", opts: ["الرياح", "السحاب", "الساعة", "المطر"], a: 0 },
-      { q: "ما هو الشيء الذي نراه في السماء وإذا أضفنا له حرفاً أصبح في الأرض؟", opts: ["نجم (نجمة)", "سحاب", "شمس", "قمر"], a: 0 },
-      { q: "ما هو الشجرة التي ليس لها ظل وليس لها أوراق ولا ثمار؟", opts: ["شجرة العائلة", "شجرة الزيتون", "شجرة النخيل", "شجرة الموز"], a: 0 },
-      { q: "ما هو الشيء الذي يرتفع ولا ينزل أبدًا؟", opts: ["العمر", "الدخان", "الطائرة", "السعر"], a: 0 },
-      { q: "له أربعة أرجل ولا يستطيع المشي؟", opts: ["الكرسي", "الكلب", "الطفل", "القطار"], a: 0 }
+      { q: "ما هو الشجرة التي ليس لها ظل ولا أوراق ولا ثمار؟", opts: ["شجرة العائلة", "شجرة الزيتون", "شجرة النخيل", "الموز"], a: 0 },
+      { q: "ما هو الشيء الذي يرتفع ولا ينزل أبدًا؟", opts: ["العمر", "الدخان", "الطائرة", "السعر"], a: 0 }
     ];
 
-    let level = 1;
-    let coins = 0;
-    let timer;
-    let timeLeft = 15;
-    let isSoundMuted = false;
-    let currentQ = null;
+    let level = 1, coins = 0, timer, timeLeft = 15, isMuted = false, currentQ = null;
 
-    // إعدادات الصوت بواسطة Web Audio API (بدون روابط خارجية لتضمن اشتغال الأصوات 100%)
+    // توليد أصوات اللعبة عبر المتصفح دون الحاجة لملفات خارجية
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
     function playBeep(freq, type, duration) {
-      if (isSoundMuted) return;
+      if (isMuted) return;
       try {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
-        osc.type = type;
-        osc.frequency.value = freq;
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
+        osc.type = type; osc.frequency.value = freq;
+        osc.connect(gain); gain.connect(audioCtx.destination);
         osc.start();
         gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
         osc.stop(audioCtx.currentTime + duration);
-      } catch (e) {}
+      } catch(e){}
     }
 
-    function soundCorrect() { playBeep(600, 'sine', 0.15); setTimeout(() => playBeep(800, 'sine', 0.25), 150); }
-    function soundWrong() { playBeep(250, 'sawtooth', 0.3); }
-    function soundReward() { playBeep(523.25, 'triangle', 0.15); setTimeout(() => playBeep(659.25, 'triangle', 0.15), 150); setTimeout(() => playBeep(783.99, 'triangle', 0.3), 300); }
+    function soundCorrect() { playBeep(600, 'sine', 0.12); setTimeout(() => playBeep(850, 'sine', 0.2), 120); }
+    function soundWrong() { playBeep(220, 'sawtooth', 0.3); }
+    function soundReward() { playBeep(523, 'triangle', 0.15); setTimeout(() => playBeep(659, 'triangle', 0.15), 150); setTimeout(() => playBeep(783, 'triangle', 0.3), 300); }
 
     function toggleSound() {
-      isSoundMuted = !isSoundMuted;
-      document.getElementById('soundBtn').innerText = isSoundMuted ? '🔇' : '🔊';
+      isMuted = !isMuted;
+      document.getElementById('soundBtn').innerText = isMuted ? '🔇' : '🔊';
     }
 
     function startGame() {
       document.getElementById("startScreen").style.display = "none";
       document.getElementById("playArea").style.display = "block";
-      level = 1;
-      coins = 0;
-      updateHeader();
-      loadNextQuestion();
+      document.getElementById("gameOverModal").style.display = "none";
+      level = 1; coins = 0;
+      updateStats();
+      loadQuestion();
     }
 
-    function updateHeader() {
+    function updateStats() {
       document.getElementById("levelNum").innerText = level;
       document.getElementById("coinsNum").innerText = coins;
-      document.getElementById("levelBadge").innerText = `المرحلة ${level}`;
     }
 
-    function loadNextQuestion() {
+    function loadQuestion() {
       clearInterval(timer);
       timeLeft = 15;
       updateTimerUI();
 
-      // خلط الأسئلة واختيار سؤال
-      const randomIndex = Math.floor(Math.random() * questionBank.length);
-      const rawQ = questionBank[randomIndex];
+      // خلط الأسئلة والأجوبة تلقائياً لمستويات لا تنتهي
+      let rawQ = questions[(level - 1) % questions.length];
+      let opts = rawQ.opts.map((text, idx) => ({ text, isCorrect: idx === rawQ.a }));
+      opts.sort(() => Math.random() - 0.5);
 
-      // خلط الاختيارات حتى لا تكون الإجابة دائماً هي الأولى
-      let optionsWithIndex = rawQ.opts.map((opt, idx) => ({ text: opt, originalIndex: idx }));
-      optionsWithIndex.sort(() => Math.random() - 0.5);
+      currentQ = { q: rawQ.q, opts };
 
-      const correctNewIdx = optionsWithIndex.findIndex(item => item.originalIndex === rawQ.a);
+      document.getElementById("riddleText").innerText = currentQ.q;
+      const box = document.getElementById("optionsBox");
+      box.innerHTML = "";
 
-      currentQ = {
-        question: rawQ.q,
-        options: optionsWithIndex.map(item => item.text),
-        correctIndex: correctNewIdx
-      };
-
-      document.getElementById("riddleDisplay").innerText = currentQ.question;
-      const optionsBox = document.getElementById("optionsBox");
-      optionsBox.innerHTML = "";
-
-      currentQ.options.forEach((opt, idx) => {
+      currentQ.opts.forEach((item, idx) => {
         const btn = document.createElement("button");
-        btn.className = "btn-option";
-        btn.innerText = opt;
-        btn.onclick = () => checkAnswer(idx, btn);
-        optionsBox.appendChild(btn);
+        btn.className = "option";
+        btn.innerText = item.text;
+        btn.onclick = () => check(item.isCorrect, btn);
+        box.appendChild(btn);
       });
 
       timer = setInterval(() => {
@@ -380,7 +298,7 @@
         if (timeLeft <= 0) {
           clearInterval(timer);
           soundWrong();
-          showGameOver();
+          gameOver();
         }
       }, 1000);
     }
@@ -388,67 +306,51 @@
     function updateTimerUI() {
       document.getElementById("timeLeft").innerText = timeLeft;
       const bar = document.getElementById("timerBar");
-      const percentage = (timeLeft / 15) * 100;
-      bar.style.width = `${percentage}%`;
-      
-      if (timeLeft <= 5) {
-        bar.style.backgroundColor = "var(--danger)";
-      } else {
-        bar.style.backgroundColor = "var(--accent)";
-      }
+      bar.style.width = `${(timeLeft / 15) * 100}%`;
+      bar.style.backgroundColor = timeLeft <= 5 ? "var(--danger)" : "var(--accent)";
     }
 
-    function checkAnswer(selectedIdx, btn) {
+    function check(isCorrect, btn) {
       clearInterval(timer);
-      const buttons = document.querySelectorAll(".btn-option");
-      buttons.forEach(b => b.disabled = true);
+      const allBtns = document.querySelectorAll(".option");
+      allBtns.forEach(b => b.disabled = true);
 
-      if (selectedIdx === currentQ.correctIndex) {
+      if (isCorrect) {
         btn.classList.add("correct");
         soundCorrect();
         coins += 10;
-        
         setTimeout(() => {
           level++;
-          updateHeader();
-
-          // مكافأة كل 5 مستويات
+          updateStats();
           if ((level - 1) % 5 === 0) {
             coins += 50;
-            updateHeader();
+            updateStats();
             soundReward();
-            document.getElementById("rewardText").innerText = `وصلت إلى المرحلة ${level - 1} بنجاح وحصلت على مكافأة +50 عملة 🪙!`;
+            document.getElementById("rewardMsg").innerText = `وصلت إلى المستوى ${level - 1} وفزت بمكافأة +50 عملة 🪙!`;
             document.getElementById("rewardModal").style.display = "flex";
           } else {
-            loadNextQuestion();
+            loadQuestion();
           }
-        }, 1200);
-
+        }, 1000);
       } else {
         btn.classList.add("wrong");
-        buttons[currentQ.correctIndex].classList.add("correct");
         soundWrong();
-        setTimeout(showGameOver, 1500);
+        setTimeout(gameOver, 1200);
       }
     }
 
-    function closeRewardModal() {
+    function closeReward() {
       document.getElementById("rewardModal").style.display = "none";
-      loadNextQuestion();
+      loadQuestion();
     }
 
     function use5050() {
-      if (coins < 30) {
-        alert("ليس لديك عملات كافية! تحتاج 30 عملة 🪙");
-        return;
-      }
+      if (coins < 30) return alert("تحتاج 30 عملة 🪙 لاستخدام المساعدة!");
       coins -= 30;
-      updateHeader();
-
-      const buttons = document.querySelectorAll(".btn-option");
+      updateStats();
       let removed = 0;
-      buttons.forEach((btn, idx) => {
-        if (idx !== currentQ.correctIndex && removed < 2) {
+      document.querySelectorAll(".option").forEach((btn, idx) => {
+        if (!currentQ.opts[idx].isCorrect && removed < 2) {
           btn.style.visibility = "hidden";
           removed++;
         }
@@ -456,27 +358,23 @@
     }
 
     function useSkip() {
-      if (coins < 50) {
-        alert("ليس لديك عملات كافية! تحتاج 50 عملة 🪙");
-        return;
-      }
+      if (coins < 50) return alert("تحتاج 50 عملة 🪙 لتخطي المرحلة!");
       coins -= 50;
       level++;
-      updateHeader();
-      loadNextQuestion();
+      updateStats();
+      loadQuestion();
     }
 
-    function showGameOver() {
+    function gameOver() {
       document.getElementById("finalLevel").innerText = level;
       document.getElementById("finalCoins").innerText = coins;
       document.getElementById("gameOverModal").style.display = "flex";
     }
 
     function restartGame() {
-      document.getElementById("gameOverModal").style.display = "none";
       startGame();
     }
   </script>
 </body>
-                                                                                                      </html>
-                                                                                                      
+          </html>
+          
